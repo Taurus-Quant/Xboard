@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+'bsc_usdt_api_key' => env('BSC_USDT_API_KEY', 'PR35SDDCNQ6RCGRI18GWKPQZKZ8XJFKGCI'),
     /*
     |--------------------------------------------------------------------------
     | Application Name

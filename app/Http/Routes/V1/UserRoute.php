@@ -13,6 +13,7 @@ use App\Http\Controllers\V1\User\StatController;
 use App\Http\Controllers\V1\User\TelegramController;
 use App\Http\Controllers\V1\User\TicketController;
 use App\Http\Controllers\V1\User\UserController;
+use App\Http\Controllers\V1\User\BscUsdtController;
 use Illuminate\Contracts\Routing\Registrar;
 
 class UserRoute
@@ -71,6 +72,10 @@ class UserRoute
             $router->get('/knowledge/getCategory', [KnowledgeController::class, 'getCategory']);
             // Stat
             $router->get('/stat/getTrafficLog', [StatController::class, 'getTrafficLog']);
+            // BSC-USDT Payment
+            $router->get('/bsc-usdt/auto-check', [BscUsdtController::class, 'autoCheckPayments']);
+            $router->get('/bsc-usdt/check-status', [BscUsdtController::class, 'checkStatus']);
+            $router->get('/bsc-usdt/wallet-address', [BscUsdtController::class, 'getWalletAddress']);
         });
     }
 }
