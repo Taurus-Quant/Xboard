@@ -22,8 +22,15 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=null
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=xboard
+      - DB_USERNAME=xboard
+      - DB_PASSWORD=xboard_password
     depends_on:
       - redis
+      - mysql
     restart: on-failure
     ports:
       - 7001:7001
@@ -59,6 +66,19 @@ services:
     restart: unless-stopped
     volumes:
       - ./.docker/.data/redis:/data
+    networks:
+      - xboard-network
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=xboard_root_password
+      - MYSQL_DATABASE=xboard
+      - MYSQL_USER=xboard
+      - MYSQL_PASSWORD=xboard_password
+    volumes:
+      - ./.docker/.data/mysql:/var/lib/mysql
     networks:
       - xboard-network
 
