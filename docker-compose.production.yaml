@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.custom
+    volumes:
+      - ./:/www
+      - ./.docker/.data/redis/:/data/
+    environment:
+      - docker=true
+    depends_on:
+      - redis
+    restart: on-failure
+    ports:
+      - 7001:7001
+    networks:
+      - xboard-network
+
+  horizon:
+    build:
+      context: .
+      dockerfile: Dockerfile.custom
+    volumes:
+      - ./:/www
+      - ./.docker/.data/redis/:/data/
+    restart: on-failure
+    command: php artisan horizon
+    depends_on:
+      - redis
+    networks:
+      - xboard-network
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --unixsocket /data/redis.sock --unixsocketperm 777 --save 900 1 --save 300 10 --save 60 10000
+    restart: unless-stopped
+    volumes:
+      - ./.docker/.data/redis:/data
+    networks:
+      - xboard-network
+
+networks:
+  xboard-network:
+    driver: bridge

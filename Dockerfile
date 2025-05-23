@@ -16,29 +16,24 @@ WORKDIR /www
 
 COPY .docker /
 
-# Add build arguments
-ARG CACHEBUST
-ARG REPO_URL
-ARG BRANCH_NAME
-
-RUN echo "Attempting to clone branch: ${BRANCH_NAME} from ${REPO_URL} with CACHEBUST: ${CACHEBUST}" && \
-    rm -rf ./* && \
-    rm -rf .git && \
-    git config --global --add safe.directory /www && \
-    git clone --depth 1 --branch ${BRANCH_NAME} ${REPO_URL} .
+# 我们将使用本地代码，不需要从远程仓库克隆
+# 创建必要的目录
+RUN mkdir -p /www/storage/logs /www/storage/app/public /www/bootstrap/cache /www/.docker/.data/redis && \
+    chown -R www:www /www && \
+    chmod -R 755 /www/storage /www/bootstrap/cache
 
 COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-RUN composer install --no-cache --no-dev \
-    && php artisan storage:link \
-    && chown -R www:www /www \
-    && chmod -R 775 /www \
-    && mkdir -p /data \
-    && chown redis:redis /data
+# u5728u6784u5efau65f6u5b89u88c5u57fau672cu5de5u5177
+RUN mkdir -p /data && chown redis:redis /data
+
+# u5728u542fu52a8u65f6u8fd0u884cu7684u811au672c
+COPY .docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
     
 ENV ENABLE_WEB=true \
     ENABLE_HORIZON=true \
     ENABLE_REDIS=false 
 
 EXPOSE 7001
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"] 
+CMD ["/entrypoint.sh"]

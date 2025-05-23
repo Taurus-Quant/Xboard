@@ -1,0 +1,10 @@
+{
+    "name": "BSC-USDT 支付",
+    "description": "支持 BSC 网络的 USDT 支付方式",
+    "version": "1.0.0",
+    "author": "Taurus-Quant",
+    "code": "bscusdtpayment",
+    "require": {
+        "xboard": ">=1.0.0"
+    }
+}

@@ -88,10 +88,8 @@
             "@php artisan key:generate --ansi"
         ]
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packagist.org"
-        }
-    ]
+    "repositories": [{
+        "type": "composer",
+        "url": "https://packagist.org"
+    }]
 }
