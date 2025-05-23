@@ -47,29 +47,27 @@ RUN echo 'server { listen 7001; root /www/public; index index.php index.html; lo
 
 # 创建 Supervisor 配置
 RUN mkdir -p /etc/supervisor
-RUN cat > /etc/supervisor/supervisord.conf << 'EOL'
-[supervisord]
-nodaemon=true
-user=root
-
-[program:php-fpm]
-command=php-fpm -F
-autostart=true
-autorestart=true
-stdout_logfile=/dev/stdout
-stdout_logfile_maxbytes=0
-stderr_logfile=/dev/stderr
-stderr_logfile_maxbytes=0
-
-[program:nginx]
-command=nginx -g "daemon off;"
-autostart=true
-autorestart=true
-stdout_logfile=/dev/stdout
-stdout_logfile_maxbytes=0
-stderr_logfile=/dev/stderr
-stderr_logfile_maxbytes=0
-EOL
+RUN echo "[supervisord]" > /etc/supervisor/supervisord.conf
+RUN echo "nodaemon=true" >> /etc/supervisor/supervisord.conf
+RUN echo "user=root" >> /etc/supervisor/supervisord.conf
+RUN echo "" >> /etc/supervisor/supervisord.conf
+RUN echo "[program:php-fpm]" >> /etc/supervisor/supervisord.conf
+RUN echo "command=php-fpm -F" >> /etc/supervisor/supervisord.conf
+RUN echo "autostart=true" >> /etc/supervisor/supervisord.conf
+RUN echo "autorestart=true" >> /etc/supervisor/supervisord.conf
+RUN echo "stdout_logfile=/dev/stdout" >> /etc/supervisor/supervisord.conf
+RUN echo "stdout_logfile_maxbytes=0" >> /etc/supervisor/supervisord.conf
+RUN echo "stderr_logfile=/dev/stderr" >> /etc/supervisor/supervisord.conf
+RUN echo "stderr_logfile_maxbytes=0" >> /etc/supervisor/supervisord.conf
+RUN echo "" >> /etc/supervisor/supervisord.conf
+RUN echo "[program:nginx]" >> /etc/supervisor/supervisord.conf
+RUN echo "command=nginx -g \"daemon off;\"" >> /etc/supervisor/supervisord.conf
+RUN echo "autostart=true" >> /etc/supervisor/supervisord.conf
+RUN echo "autorestart=true" >> /etc/supervisor/supervisord.conf
+RUN echo "stdout_logfile=/dev/stdout" >> /etc/supervisor/supervisord.conf
+RUN echo "stdout_logfile_maxbytes=0" >> /etc/supervisor/supervisord.conf
+RUN echo "stderr_logfile=/dev/stderr" >> /etc/supervisor/supervisord.conf
+RUN echo "stderr_logfile_maxbytes=0" >> /etc/supervisor/supervisord.conf
 
 # 创建数据目录
 RUN mkdir -p /data && chown redis:redis /data
