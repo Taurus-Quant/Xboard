@@ -6,16 +6,9 @@ set -e
 # 显示执行的命令
 set -x
 
-# 只更新包列表，不进行完整的系统更新
-apt-get update
+# 跳过系统包的安装和配置
+echo "跳过系统包的安装和配置，直接进行 Docker 相关的操作"
 
-# 安装必要的依赖
-apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    software-properties-common \
-    git
 
 # 安装 Docker
 if ! command -v docker &> /dev/null; then

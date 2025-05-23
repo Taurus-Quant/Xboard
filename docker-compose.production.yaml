@@ -4,7 +4,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.custom
+      dockerfile: Dockerfile.simple
     volumes:
       # 使用更精确的挂载方式，避免挂载冲突
       - ./app:/www/app
@@ -31,7 +31,7 @@ services:
   horizon:
     build:
       context: .
-      dockerfile: Dockerfile.custom
+      dockerfile: Dockerfile.simple
     volumes:
       # 使用更精确的挂载方式，避免挂载冲突
       - ./app:/www/app

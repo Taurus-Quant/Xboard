@@ -27,23 +27,70 @@ WORKDIR /www
 # 复制代码到容器
 COPY . /www/
 
-# 复制 Nginx 配置
-COPY .docker/nginx/default.conf /etc/nginx/http.d/default.conf
+# 创建配置文件
+COPY .docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# 复制 Supervisor 配置
-COPY .docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# 创建 Nginx 配置
+RUN mkdir -p /etc/nginx/http.d/
+RUN cat > /etc/nginx/http.d/default.conf << 'EOL'
+server {
+    listen 7001;
+    root /www/public;
+    index index.php index.html;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+EOL
+
+# 创建 Supervisor 配置
+RUN mkdir -p /etc/supervisor/conf.d/
+RUN cat > /etc/supervisor/conf.d/supervisord.conf << 'EOL'
+[supervisord]
+nodaemon=true
+user=root
+
+[program:php-fpm]
+command=php-fpm -F
+autostart=true
+autorestart=true
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+
+[program:nginx]
+command=nginx -g "daemon off;"
+autostart=true
+autorestart=true
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+EOL
 
 # 创建数据目录
 RUN mkdir -p /data && chown redis:redis /data
 
-# 创建启动脚本
-COPY .docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # 环境变量
-ENV ENABLE_WEB=true \\
-    ENABLE_HORIZON=true \\
-    ENABLE_REDIS=false 
+ENV ENABLE_WEB=true \
+    ENABLE_HORIZON=true \
+    ENABLE_REDIS=false
 
 EXPOSE 7001
 CMD ["/entrypoint.sh"]
