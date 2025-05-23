@@ -19,4 +19,4 @@ if [ ! -L "/www/public/storage" ]; then
 fi
 
 # 启动 supervisord
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf

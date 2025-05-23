@@ -15,6 +15,10 @@ RUN apk add --no-cache \
     libjpeg-turbo-dev \
     openssl-dev \
     shadow \
+    autoconf \
+    gcc \
+    g++ \
+    make \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo_mysql mysqli bcmath opcache zip pcntl exif
 
@@ -42,8 +46,30 @@ RUN mkdir -p /etc/nginx/http.d/
 RUN echo 'server { listen 7001; root /www/public; index index.php index.html; location / { try_files $uri $uri/ /index.php?$query_string; } location ~ \\.php$ { fastcgi_pass 127.0.0.1:9000; fastcgi_index index.php; fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; include fastcgi_params; } location ~ /\\.ht { deny all; } }' > /etc/nginx/http.d/default.conf
 
 # 创建 Supervisor 配置
-RUN mkdir -p /etc/supervisor/conf.d/
-RUN echo '[supervisord]\nnodaemon=true\nuser=root\n\n[program:php-fpm]\ncommand=php-fpm -F\nautostart=true\nautorestart=true\nstdout_logfile=/dev/stdout\nstdout_logfile_maxbytes=0\nstderr_logfile=/dev/stderr\nstderr_logfile_maxbytes=0\n\n[program:nginx]\ncommand=nginx -g "daemon off;"\nautostart=true\nautorestart=true\nstdout_logfile=/dev/stdout\nstdout_logfile_maxbytes=0\nstderr_logfile=/dev/stderr\nstderr_logfile_maxbytes=0' > /etc/supervisor/conf.d/supervisord.conf
+RUN mkdir -p /etc/supervisor
+RUN cat > /etc/supervisor/supervisord.conf << 'EOL'
+[supervisord]
+nodaemon=true
+user=root
+
+[program:php-fpm]
+command=php-fpm -F
+autostart=true
+autorestart=true
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+
+[program:nginx]
+command=nginx -g "daemon off;"
+autostart=true
+autorestart=true
+stdout_logfile=/dev/stdout
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/stderr
+stderr_logfile_maxbytes=0
+EOL
 
 # 创建数据目录
 RUN mkdir -p /data && chown redis:redis /data

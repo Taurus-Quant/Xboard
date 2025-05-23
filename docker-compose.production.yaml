@@ -19,6 +19,9 @@ services:
       - ./.docker/.data/redis/:/data/
     environment:
       - docker=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=null
     depends_on:
       - redis
     restart: on-failure
@@ -52,7 +55,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    command: redis-server --unixsocket /data/redis.sock --unixsocketperm 777 --save 900 1 --save 300 10 --save 60 10000
+    command: redis-server --port 6379 --save 900 1 --save 300 10 --save 60 10000
     restart: unless-stopped
     volumes:
       - ./.docker/.data/redis:/data
