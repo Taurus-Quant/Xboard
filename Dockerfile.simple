@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine
+FROM php:8.2-fpm-alpine
 
 RUN apk add --no-cache \
     nginx \
@@ -14,8 +14,15 @@ RUN apk add --no-cache \
     freetype-dev \
     libjpeg-turbo-dev \
     openssl-dev \
+    shadow \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo_mysql mysqli bcmath opcache zip pcntl exif
+
+# 安装 Redis PHP 扩展
+RUN pecl install redis && docker-php-ext-enable redis
+
+# 创建 www 用户
+RUN addgroup -g 1000 www && adduser -u 1000 -G www -h /www -D www
 
 # 安装 Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

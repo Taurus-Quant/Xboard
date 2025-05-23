@@ -15,8 +15,7 @@ services:
       - ./resources:/www/resources
       - ./routes:/www/routes
       - ./storage:/www/storage
-      - ./composer.json:/www/composer.json
-      - ./composer.lock:/www/composer.lock
+      # u79fbu9664u5bf9 composer.json u548c composer.lock u6587u4ef6u7684u6302u8f7du4ee5u907fu514du51b2u7a81
       - ./.docker/.data/redis/:/data/
     environment:
       - docker=true
@@ -42,8 +41,7 @@ services:
       - ./resources:/www/resources
       - ./routes:/www/routes
       - ./storage:/www/storage
-      - ./composer.json:/www/composer.json
-      - ./composer.lock:/www/composer.lock
+      # u79fbu9664u5bf9 composer.json u548c composer.lock u6587u4ef6u7684u6302u8f7du4ee5u907fu514du51b2u7a81
       - ./.docker/.data/redis/:/data/
     restart: on-failure
     command: php artisan horizon
