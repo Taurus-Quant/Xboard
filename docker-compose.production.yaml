@@ -6,7 +6,17 @@ services:
       context: .
       dockerfile: Dockerfile.custom
     volumes:
-      - ./:/www
+      # 使用更精确的挂载方式，避免挂载冲突
+      - ./app:/www/app
+      - ./bootstrap:/www/bootstrap
+      - ./config:/www/config
+      - ./database:/www/database
+      - ./public:/www/public
+      - ./resources:/www/resources
+      - ./routes:/www/routes
+      - ./storage:/www/storage
+      - ./composer.json:/www/composer.json
+      - ./composer.lock:/www/composer.lock
       - ./.docker/.data/redis/:/data/
     environment:
       - docker=true
@@ -23,7 +33,17 @@ services:
       context: .
       dockerfile: Dockerfile.custom
     volumes:
-      - ./:/www
+      # 使用更精确的挂载方式，避免挂载冲突
+      - ./app:/www/app
+      - ./bootstrap:/www/bootstrap
+      - ./config:/www/config
+      - ./database:/www/database
+      - ./public:/www/public
+      - ./resources:/www/resources
+      - ./routes:/www/routes
+      - ./storage:/www/storage
+      - ./composer.json:/www/composer.json
+      - ./composer.lock:/www/composer.lock
       - ./.docker/.data/redis/:/data/
     restart: on-failure
     command: php artisan horizon

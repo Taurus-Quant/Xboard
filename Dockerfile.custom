@@ -1,20 +1,20 @@
 FROM php:8.1-fpm-alpine
 
-RUN apk add --no-cache \
-    nginx \
-    supervisor \
-    redis \
-    git \
-    curl \
-    zip \
-    unzip \
-    libpng-dev \
-    libzip-dev \
-    oniguruma-dev \
-    freetype-dev \
-    libjpeg-turbo-dev \
-    openssl-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+RUN apk add --no-cache \\
+    nginx \\
+    supervisor \\
+    redis \\
+    git \\
+    curl \\
+    zip \\
+    unzip \\
+    libpng-dev \\
+    libzip-dev \\
+    oniguruma-dev \\
+    freetype-dev \\
+    libjpeg-turbo-dev \\
+    openssl-dev \\
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \\
     && docker-php-ext-install -j$(nproc) gd pdo_mysql mysqli bcmath opcache zip pcntl exif
 
 # 安装 Composer
@@ -23,6 +23,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # 创建工作目录
 RUN mkdir -p /www
 WORKDIR /www
+
+# 复制代码到容器
+COPY . /www/
 
 # 复制 Nginx 配置
 COPY .docker/nginx/default.conf /etc/nginx/http.d/default.conf
@@ -38,8 +41,8 @@ COPY .docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # 环境变量
-ENV ENABLE_WEB=true \
-    ENABLE_HORIZON=true \
+ENV ENABLE_WEB=true \\
+    ENABLE_HORIZON=true \\
     ENABLE_REDIS=false 
 
 EXPOSE 7001

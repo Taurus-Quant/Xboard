@@ -6,9 +6,8 @@ set -e
 # 显示执行的命令
 set -x
 
-# 更新系统包
+# 只更新包列表，不进行完整的系统更新
 apt-get update
-apt-get upgrade -y
 
 # 安装必要的依赖
 apt-get install -y \
